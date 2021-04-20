@@ -11,16 +11,22 @@ Data Science Practicum II Project - Forecasting Florida Manatee Mortalities
 
 ### Methodology
 
+#### Tools and Libraries
+
+* Python
+* Tableau
+* R
+
+## Phase I - Data Collection
+
+### Step 1:
 
 
-## Phase I
-
-
-## Phase II 
+## Phase II - Exploratory Data Analysis
 
 
 
-## Phase III 
+## Phase III - Predictive Analytics
 
 
 
