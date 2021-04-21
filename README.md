@@ -28,7 +28,13 @@ Data Science Practicum II Project - Forecasting Florida Manatee Mortalities
 
 ## Phase III - Predictive Analytics
 
+### Holt-Winters
 
+### ARIMA - AutoRegressive Integrated Moving Average
+
+*p* = order of the autoregressive part
+*d* = degree of first differencing involved
+*q* = order of the moving average part.
 
 ## For the Future
 
@@ -43,3 +49,9 @@ Data Science Practicum II Project - Forecasting Florida Manatee Mortalities
 7. Rename columns: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rename.html
 8. re.search(): https://www.w3schools.com/python/python_regex.asp
 9. Create empty dataframe and append rows: https://www.geeksforgeeks.org/create-a-pandas-dataframe-from-lists/
+10. a
+11. a
+12. a
+13. a
+14. a
+15. Forecasting: https://otexts.com/fpp2/
