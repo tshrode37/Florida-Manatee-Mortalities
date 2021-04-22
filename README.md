@@ -37,6 +37,8 @@ Anaconda version 4.8.3, Tableau Desktop version 2019.3, and R version 4.0.3 was 
 
 ## Phase I - Data Collection
 
+The `ReadManateePDFs.ipynb` file was used for the data collection portion of the assignment.
+
 ### Step 1: Webscraping using `BeautifulSoup`
 
 
@@ -48,17 +50,20 @@ Anaconda version 4.8.3, Tableau Desktop version 2019.3, and R version 4.0.3 was 
 
 ## Phase II - Exploratory Data Analysis
 
+The `Manatee_mortality_visuals.twb` file was used to create the visualizations for the EDA portion of the project. The visualizations can be found in the `Manatee_mortality_visuals.pptx` file. Both files are located in the "Visuals" folder. 
 
 
 ## Phase III - Predictive Analytics
+
+The `FloridaManateeForecasting.R` file was used to create and analyze various forecasting models.
 
 ### Holt-Winters
 
 ### ARIMA - AutoRegressive Integrated Moving Average
 
-*p* = order of the autoregressive part
-*d* = degree of first differencing involved
-*q* = order of the moving average part.
+* *p* = order of the autoregressive part
+* *d* = degree of first differencing involved
+* *q* = order of the moving average part.
 
 ## For the Future
 
