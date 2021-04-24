@@ -100,8 +100,7 @@ By printing the first link, we can verify that the link format is correct and th
 The `tabula` module allows us to extract data tables from a `pdf` file. To do this, we will read each of our `pdf` links obtained above. First, we will need to add the link for the year 2020 to our list, which we can do using the command below. 
 
 ```python
-# add link for 2020 yearly data to links list (Section II)
-links.append("https://myfwc.com/media/22565/yeartodate.pdf")
+links.append("https://myfwc.com/media/22565/yeartodate.pdf") # add link for 2020 yearly data to links list 
 ```
 
 Now, we can loop through our `links` list and read each `pdf` link, convert each yearly dataset to a `pandas` dataframe, and append each dataframe to a list
@@ -121,7 +120,9 @@ for link in links:
 The `data` list should contain 47 dataframes.
 
 
-### Step 1: Create `pandas` Dataframes and Convert to `csv` Files
+### Step 3: Convert to `csv` Files
+
+
 
 
 ## Phase II - Exploratory Data Analysis
