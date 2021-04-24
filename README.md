@@ -41,6 +41,59 @@ The `ReadManateePDFs.ipynb` file was used for the data collection portion of the
 
 ### Step 1: Webscraping using `BeautifulSoup`
 
+To scrape the data from the FWC website, we first need to send a GET request to the specified url, which is used to request data from a specified resource.
+
+```python
+res = req.get('https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/yearly/') #GET request for url
+```
+Using the requested data above, we then convert the data to a BeautifulSoup object, which allows us to easily locate and select content within the HTML structure.
+
+```python
+soup = bs(res.content, 'lxml') #Convert to Beautiful Soup object
+```
+
+Now, to locate the information we need from the website, we can go to the FWC website (the URL specified above), use the command `ctrl-shift-I` to inspect the webpage, navigate to the section of the page that highlights the necessary information. Usually, this is embedded in "<div>" tags.
+
+```python
+summary_files = soup.find_all('div', {'class': 'stacked single-list brown'}) #find class from inspecting website
+```
+
+To display the number of items in the `summary_files` object, we can use the command:
+
+```python
+len(summary_files)
+```
+
+There is only one item, thus we will use the command `summary_files[0]`. By printing this information, we can see that the links are embedded in  "<a>" tags. To find a link from the `summary_files[0]` variable, we can use the command:
+  
+```python
+summary_files[0].find('a') #find a link from webpage list of links
+```
+
+The output from this will look like: `<a href="/media/11661/1974yearsummary.pdf" target="_blank">1974</a>`. To obtain the link, we can use the command:
+
+```python
+summary_files[0].find('a').get('href') #get href
+```
+
+The ouput will look like `'/media/11661/1974yearsummary.pdf'`. Now, to loop through the `summary_files[0]` variable, get all the "href" links, and add the links to a list, we can use the code below.
+
+
+```python
+#loop through summary_files and get all href's and add full link to list
+
+links = []
+base_url = "https://myfwc.com/" #base url of all links
+
+for x in summary_files[0].find_all("a"):
+    href = x.get("href")
+    full_link = base_url + href 
+    links.append(full_link)
+
+links[0] #print first link 
+```
+
+By printing the first link, we can verify that the link format is correct and that the data was appended to the list properly. The output from printing the first link is `'https://myfwc.com//media/11661/1974yearsummary.pdf'`, which is the 1974 manatee summary data. 
 
 ### Step 2: Extract Data using `Tabula`
 
@@ -72,18 +125,20 @@ The `FloridaManateeForecasting.R` file was used to create and analyze various fo
 1. Manatee ESA: https://www.mmc.gov/priority-topics/species-of-concern/florida-manatee/ 
 2. 1974 to 2019 Yearly Mortality Summaries: https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/yearly/
 3. 2020 Yearly Mortality Summary: https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/2020/
-4. Tabula Documentation: https://tabula-py.readthedocs.io/en/latest/tabula.html
-5. Use Tabula to Read PDF: https://github.com/chezou/tabula-py
-6. Manatee Mortality Data (1974-2019): https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/yearly/
-7. Manatee 2020 Mortality Data: https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/2020/
-8. Convert pandas DF to CSV: https://datatofish.com/export-dataframe-to-csv/
-9. Add year to column: https://stackoverflow.com/questions/20025882/add-a-string-prefix-to-each-value-in-a-string-column-using-pandas
-10. Rename columns: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rename.html
-11. re.search(): https://www.w3schools.com/python/python_regex.asp
-12. Create empty dataframe and append rows: https://www.geeksforgeeks.org/create-a-pandas-dataframe-from-lists/
-13. a
-14. a
+4. GET request: https://www.w3schools.com/tags/ref_httpmethods.asp
+5. BeautifulSoup object: https://programminghistorian.org/en/lessons/intro-to-beautiful-soup
+6. Tabula Documentation: https://tabula-py.readthedocs.io/en/latest/tabula.html
+7. Use Tabula to Read PDF: https://github.com/chezou/tabula-py
+8. Manatee Mortality Data (1974-2019): https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/yearly/
+9. Manatee 2020 Mortality Data: https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/2020/
+10. Convert pandas DF to CSV: https://datatofish.com/export-dataframe-to-csv/
+11. Add year to column: https://stackoverflow.com/questions/20025882/add-a-string-prefix-to-each-value-in-a-string-column-using-pandas
+12. Rename columns: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rename.html
+13. re.search(): https://www.w3schools.com/python/python_regex.asp
+14. Create empty dataframe and append rows: https://www.geeksforgeeks.org/create-a-pandas-dataframe-from-lists/
 15. a
 16. a
 17. a
-18. Forecasting: https://otexts.com/fpp2/
+18. a
+19. a
+20. Forecasting: https://otexts.com/fpp2/
