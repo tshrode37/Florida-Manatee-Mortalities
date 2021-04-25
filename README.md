@@ -103,7 +103,7 @@ The `tabula` module allows us to extract data tables from a `pdf` file. To do th
 links.append("https://myfwc.com/media/22565/yeartodate.pdf") # add link for 2020 yearly data to links list 
 ```
 
-Now, we can loop through our `links` list and read each `pdf` link, convert each yearly dataset to a `pandas` dataframe, and append each dataframe to a list
+Now, we can loop through our `links` list and read each `pdf` link, convert each yearly dataset to a `pandas` dataframe, and append each dataframe to a list.
 
 
 ```python
@@ -122,7 +122,38 @@ The `data` list should contain 47 dataframes.
 
 ### Step 3: Convert to `csv` Files
 
+Before we convert our dataframes to `csv` files, we need to clean our data and create a dataframe that is made of all 47 yearly data summaries. First, we will add the corresponding year to each "County" column in the dataframes.
 
+```python
+# Add corresponding year to each "County" 
+year = 1974
+
+for d in data:
+    d['County'] = d['County'].apply(lambda x: "{}{}".format(x , year))
+    year = year + 1
+```
+
+Now, to create our **full dataframe**, we will concatenate our dataframes using the `pandas` function `concat()`. We will also need to rename the columns. It should be noted that since some of the columns were renamed in the 1980's so we will have columns that will need to be merged. These columns are denoted as "A1", "A2", "B1", and "B2".
+
+```python
+full_data = pd.concat(data) #Concatenate all collected dataframes
+full_data = full_data.rename(columns={"County": "County/Year","Watercraft":"Watercraft","Flood":"A1",
+                          "Other":"Other/Human","Perinatal":"Perinatal","Cold":"Cold Stress","Natural":"Natural",
+                          "Undetermined":"B1","Unrecovered":"B2","Total":"Total","Flood Gate/":"A2",
+                          "Not":"Not Necropsied"}) #rename columns
+```
+
+We will also need to convert all the columns to the same datatype. Thus, we will convert them to float numbers. 
+
+```python
+full_data['A1'] = full_data['A1'].astype(float)
+full_data['A2'] = full_data['A2'].astype(float)
+full_data['Not Necropsied'] = full_data['Not Necropsied'].astype(float)
+full_data['Other/Human'] = full_data['Other/Human'].astype(float)
+full_data['Cold Stress'] = full_data['Cold Stress'].astype(float)
+```
+
+Now, we can combine the 
 
 
 ## Phase II - Exploratory Data Analysis
