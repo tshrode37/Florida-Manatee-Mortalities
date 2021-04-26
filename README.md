@@ -239,17 +239,43 @@ There are various methods that can be used to load data into R. Here, we will us
 ```R
 total_manatee <- read.csv(file = file.choose())
 ```
-Now, our data needs to be converted to a time series object. Below, we will convert all variables in our dataset to a time series object, and will plot the data. 
+Now, our data needs to be converted to a time series object. Below, we will convert all variables in our dataset to a time series object, and will plot the data. Plot Name: `Yearly_total_ts_plot.png`
 
 ```R
 manatee_ts <- ts(total_manatee[2:10], start = c(1974, 1), frequency = 1) #convert to time series object for all variables
-plot(manatee_ts, main = "Yearly Totals from 1974 to 2020 Plot for All Features", las = 0, cex.lab = 0.8)#plot time series data
+plot(manatee_ts, main = "Yearly Totals from 1974 to 2020 Plot for All Features", las = 0, cex.lab = 0.8) #plot time series data
+```
+Next, we need to isolate the yearly totals, which can be done with the commands below. Plot Name: `yearly_totals_trend`
+
+
+```R
+total_manatee_ts <-  ts(total_manatee$Total, start = c(1974, 1), frequency = 1) #convert to time series object for "total" column
+autoplot(total_manatee_ts) + 
+  geom_smooth() + 
+  labs(title = "Yearly Totals from 1974 to 2020",
+       y = "Totals",
+       x = "Year") #plot yearly totals
 ```
 
+From the plot above, we can see that our data has an upward trend, but there does not appear to be any seasonality. 
 
-### Holt-Winters
+### Exponential Smoothing
 
 ### ARIMA - AutoRegressive Integrated Moving Average
+
+Before we begin building our ARIMA models, we need to test if our time series is stationary. A time series is considered stationary if the mean value of time series is constant over time (this implies that the trend component is nullified), the variance does not increase over time, and seasonality is minimal. To test if our data is stationary, we can use an "Augmented Dickey-Fuller Test", and if the test returns a p-value less than 0.05, the time series is considered stationary. 
+
+```R
+adf.test(total_manatee_ts, alternative = "stationary") # test if we have a stationary time series: p > 0.05, so not stationary
+```
+Another method to identify a non-stationary time series is to use an ACF (autocorrelation) plot. If the time series is stationary, the ACF plot will decrease slowly. If the time series has seasonality, the ACF plot will have a "scalloped" shape. Plot Name: `nonstationary_timeseries_ACF.png`
+
+```R
+ggAcf(total_manatee_ts, lag = 30) #ACF plot
+```
+The plot above decreases slowing and doesn't drop to zero until Lag 18  make 
+
+
 
 * *p* = order of the autoregressive part
 * *d* = degree of first differencing involved
@@ -273,9 +299,5 @@ plot(manatee_ts, main = "Yearly Totals from 1974 to 2020 Plot for All Features",
 12. Rename columns: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rename.html
 13. re.search(): https://www.w3schools.com/python/python_regex.asp
 14. Create empty dataframe and append rows: https://www.geeksforgeeks.org/create-a-pandas-dataframe-from-lists/
-15. a
-16. a
-17. a
-18. a
-19. a
-20. Forecasting: https://otexts.com/fpp2/
+15. Stationary Time Series + Stationary Time Series: http://r-statistics.co/Time-Series-Analysis-With-R.html
+16. Forecasting and Transformations: https://otexts.com/fpp2/
