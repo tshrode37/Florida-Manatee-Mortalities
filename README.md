@@ -224,7 +224,7 @@ plot(holt_manatee) #plot original time series against forecasts
 
 
 
-
+Plot Name: `SES_forecast_alpha.png`.
 
 ### ARIMA - AutoRegressive Integrated Moving Average
 
