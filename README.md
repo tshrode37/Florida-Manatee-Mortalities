@@ -211,7 +211,20 @@ From the plot above, we can see that our data has an upward trend, but there doe
 
 ### Exponential Smoothing
 
-The simplest of exponentially smoothing methods is called *Simple Exponential Smoothing*, which is most suitable for data with no clear trend or seasonality. 
+The simplest of exponentially smoothing methods is called *Simple Exponential Smoothing*, which is most suitable for data with no clear trend or seasonality. This method provides a way to make short-term forecasts and estimate that `alpha` parameter (level at the current time point). Values of alpha lie between 0 and 1, where a 0 means that little weight is placed on the most recent observations when making forecasts of future values. 
+
+To do this in R, we need to set the `beta` and `gamma` parameters to false becuase beta specifies the coefficient for the trend and gamma specifies the coefficient for the seasonal smoothing. To fit a simple exponential smoothing predictive model, we will the `HoltWinters()` function. Plot Name: `SES_fittedvalues_alpha.png`.
+
+```R
+holt_manatee <- HoltWinters(total_manatee_ts, beta = FALSE, gamma = FALSE) #fit simple exponential model 
+holt_manatee #print estimated alpha parameter
+holt_manatee$fitted #get forecast values for original time series (1974-2020)
+plot(holt_manatee) #plot original time series against forecasts 
+```
+
+
+
+
 
 ### ARIMA - AutoRegressive Integrated Moving Average
 
@@ -252,4 +265,5 @@ The plot above decreases slowing and doesn't drop to zero until Lag 18  make
 13. re.search(): https://www.w3schools.com/python/python_regex.asp
 14. Create empty dataframe and append rows: https://www.geeksforgeeks.org/create-a-pandas-dataframe-from-lists/
 15. Stationary Time Series + Stationary Time Series: http://r-statistics.co/Time-Series-Analysis-With-R.html
-16. Forecasting and Transformations: https://otexts.com/fpp2/
+16. Alpha, Beta, Gamma Exponential Smoothing: https://docs.rapidminer.com/9.3/studio/operators/modeling/time_series/forecasting/holt-winters_trainer.html
+17. Forecasting and Transformations: https://otexts.com/fpp2/
