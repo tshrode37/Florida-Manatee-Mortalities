@@ -211,6 +211,8 @@ From the plot above, we can see that our data has an upward trend, but there doe
 
 ### Exponential Smoothing
 
+The simplest of exponentially smoothing methods is called *Simple Exponential Smoothing*, which is most suitable for data with no clear trend or seasonality. 
+
 ### ARIMA - AutoRegressive Integrated Moving Average
 
 Before we begin building our ARIMA models, we need to test if our time series is stationary. A time series is considered stationary if the mean value of time series is constant over time (this implies that the trend component is nullified), the variance does not increase over time, and seasonality is minimal. To test if our data is stationary, we can use an "Augmented Dickey-Fuller Test", and if the test returns a p-value less than 0.05, the time series is considered stationary. 
