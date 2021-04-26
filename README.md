@@ -169,58 +169,8 @@ To store this file as a `csv` file, we can specify the path where we want to sto
 ```python
 full_data.to_csv(folder+'full_data.csv', index=False, header=True)
 ```
+Finally, each collected yearly summary was converted to a `csv` file, and a `csv` file that contains the yearly totals from each summary was also created (`totals.csv`). This file will be used for the predictive modeling portion of this project.
 
-#### A. Create Dataset that Contains Yearly Totals
-
-For the predictive modeling portion of the project, we will be focusing on the yearly totals from our full dataset. To create a `csv` file that only contains these rows, we can search for strings with the pattern "TOTAL:\d\d\d\d" where "\d" indicates a digit. 
-
-```python
-#search for row totals from full dataframe and append rows to list
-rows = []
-
-for x in full_data.iterrows():
-    y = re.search("TOTAL:\d\d\d\d", str(x))
-    if (y):
-        rows.append(x)
-```
-
-To create a dataframe of using the data contained in the `rows` list, we can use the commands below. We first create an empty dataframe and then we can loop through the `rows` list.
-
-```python
-#create dataframe from row values stored in list
-totals_df = pd.DataFrame(columns=["County/Year", "Watercraft", "Other/Human", "Perinatal",
-                                      "Cold Stress", "Natural", "Total", "Not Necropsied", "Flood Gate/Canal Lock", 
-                                      "Unrecovered/Undetermined"])
-
-
-for row in rows:
-    totals_df = totals_df.append(row[1])
-    
-totals_df = totals_df.reset_index(drop=True)
-```
-
-To create the `csv` file for the yearly totals, we can use the command below.
-
-```python
-totals_df.to_csv(folder+'totals.csv', index=False, header=True)
-```
-
-#### B. Convert Yearly Summaries to `csv` Files
-
-TO convert each yearly summary to a `csv` file, we can loop through our `data` list which contains all yearly summary dataframes. Then, we can use the `os` module to verfiy that the files exist. 
-
-```python
-year = 1974 #start year
-
-for d in data:
-    filename = "{}.csv".format(year)
-    year = year + 1
-    d.to_csv(folder+filename, index=False, header=True)
-    if os.path.isfile(folder+filename):
-        print("{}.csv file does exist".format(year))
-    else:
-        print("{}.csv file does not exist".format(year))
-```
 
 ## Phase II - Exploratory Data Analysis
 
