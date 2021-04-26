@@ -229,7 +229,23 @@ The `Manatee_mortality_visuals.twb` file was used to create the visualizations f
 
 ## Phase III - Predictive Analytics
 
-The `FloridaManateeForecasting.R` file was used to create and analyze various forecasting models.
+The `FloridaManateeForecasting.R` file was used to create and analyze various forecasting models. All plots created in this sections can be found in the "R Graphics" folder.
+
+
+### Load Data into R and Create Time Series Objects
+
+There are various methods that can be used to load data into R. Here, we will use the `file.choose()` method, which allows us to choose the `csv` file to be uploaded into R. As mentioned above, we will be using the **yearly totals** dataset, which has been saved in the `totals.csv` file. 
+
+```R
+total_manatee <- read.csv(file = file.choose())
+```
+Now, our data needs to be converted to a time series object. Below, we will convert all variables in our dataset to a time series object, and will plot the data. 
+
+```R
+manatee_ts <- ts(total_manatee[2:10], start = c(1974, 1), frequency = 1) #convert to time series object for all variables
+plot(manatee_ts, main = "Yearly Totals from 1974 to 2020 Plot for All Features", las = 0, cex.lab = 0.8)#plot time series data
+```
+
 
 ### Holt-Winters
 
