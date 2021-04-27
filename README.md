@@ -179,8 +179,7 @@ The `Manatee_mortality_visuals.twb` file was used to create the visualizations f
 
 ## Phase III - Predictive Analytics
 
-The `FloridaManateeForecasting.R` file was used to create and analyze various forecasting models. All plots created in this sections can be found in the "R Graphics" folder.
-
+The `FloridaManateeForecasting.R` file was used to create and analyze various forecasting models. 
 
 ### Load Data into R and Create Time Series Objects
 
@@ -189,14 +188,16 @@ There are various methods that can be used to load data into R. Here, we will us
 ```R
 total_manatee <- read.csv(file = file.choose())
 ```
-Now, our data needs to be converted to a time series object. Below, we will convert all variables in our dataset to a time series object, and will plot the data. Plot Name: `Yearly_total_ts_plot.png`
-
+Now, our data needs to be converted to a time series object. Below, we will convert all variables in our dataset to a time series object, and will plot the data. 
 ```R
 manatee_ts <- ts(total_manatee[2:10], start = c(1974, 1), frequency = 1) #convert to time series object for all variables
 plot(manatee_ts, main = "Yearly Totals from 1974 to 2020 Plot for All Features", las = 0, cex.lab = 0.8) #plot time series data
 ```
-Next, we need to isolate the yearly totals, which can be done with the commands below. Plot Name: `yearly_totals_trend`
 
+<img src="https://user-images.githubusercontent.com/54876028/116271904-6e045f00-a74e-11eb-8cfe-bcfc3eff81a1.png" width="750" height="700"/>
+
+
+Next, we need to isolate the yearly totals, which can be done with the commands below. 
 
 ```R
 total_manatee_ts <-  ts(total_manatee$Total, start = c(1974, 1), frequency = 1) #convert to time series object for "total" column
@@ -207,31 +208,34 @@ autoplot(total_manatee_ts) +
        x = "Year") #plot yearly totals
 ```
 
+<img src="https://user-images.githubusercontent.com/54876028/116270835-727c4800-a74d-11eb-8dc0-5e5c95add13a.png" width="650" height="600"/>
+
 From the plot above, we can see that our data has an upward trend, but there does not appear to be any seasonality. 
 
 ### Exponential Smoothing
 
 The simplest of exponentially smoothing methods is called *Simple Exponential Smoothing*, which is most suitable for data with no clear trend or seasonality. This method provides a way to make short-term forecasts and estimate that `alpha` parameter (level at the current time point). Values of alpha lie between 0 and 1, where a 0 means that little weight is placed on the most recent observations when making forecasts of future values. 
 
-To do this in R, we need to set the `beta` and `gamma` parameters to false becuase beta specifies the coefficient for the trend and gamma specifies the coefficient for the seasonal smoothing. To fit a simple exponential smoothing predictive model, we will the `HoltWinters()` function. Plot Name: `SES_fittedvalues_alpha.png`.
-
+To do this in R, we need to set the `beta` and `gamma` parameters to false becuase beta specifies the coefficient for the trend and gamma specifies the coefficient for the seasonal smoothing. To fit a simple exponential smoothing predictive model, we will the `HoltWinters()` function. 
 ```R
 holt_manatee <- HoltWinters(total_manatee_ts, beta = FALSE, gamma = FALSE) #fit simple exponential model 
 holt_manatee #print estimated alpha parameter
 holt_manatee$fitted #get forecast values for original time series (1974-2020)
 plot(holt_manatee) #plot original time series against forecasts 
 ```
+<img src="https://user-images.githubusercontent.com/54876028/116273201-8de85280-a74f-11eb-847e-677ed910d984.png" width="550" height="500"/>
 
-To use the fitted model for forecasting, we can use the commands below. Plot Name: `SES_forecast_alpha.png`.
+To use the fitted model for forecasting, we can use the commands below. 
 
 ```R
 holt_forecast <- forecast:::forecast.HoltWinters(holt_manatee, h= 10) #forecast using Holt Winters
 holt_forecast #print forecast values
 plot(holt_forecast) #plot forecast values
 ```
+<img src="https://user-images.githubusercontent.com/54876028/116273128-7c9f4600-a74f-11eb-8204-3c5031d47fd1.png" width="550" height="500"/>
 
-Finally, we need to determine if the model cannot be improved upon. We can do this by checking correlations between forecast erros for successive predictions with an ACF plot. If there are correlations, this would indicate that the simple exponential smoothing forecasts could be improved with another forecasting techniquue. To test whether there are non-zero correlations, we can use a *Ljung-Box Test*. If the p-value is greater than 0.05, this indicated that there is little evidence of non-zero correlations. Then, we check whether the forecast errors are normally distributed with mean zero (histogram of forecast residuals) and constant variance (plot forecast residuals). Plot Names (in order as they appear below): `SES_ACFresiduals_alpha.png`, `SES_residuals_alpha.png`, `SES_residualsHist_alpha.png`.
- 
+
+Finally, we need to determine if the model cannot be improved upon. We can do this by checking correlations between forecast erros for successive predictions with an ACF plot. If there are correlations, this would indicate that the simple exponential smoothing forecasts could be improved with another forecasting techniquue. To test whether there are non-zero correlations, we can use a *Ljung-Box Test*. If the p-value is greater than 0.05, this indicated that there is little evidence of non-zero correlations. Then, we check whether the forecast errors are normally distributed with mean zero (histogram of forecast residuals) and constant variance (plot forecast residuals).  
  
 ```R
 ggAcf(holt_forecast$residuals, lag.max = 30) #ACF plot to see if there are correlations between forecast errors for successive predictions
@@ -240,6 +244,9 @@ Box.test(holt_forecast$residuals, lag = 30,type="Ljung-Box") #test whether there
 plot.ts(holt_forecast$residuals) #plot residuals to ensure forecast error have constant variance
 hist(holt_forecast$residuals, main = "Histogram of Simple Holt-Winters Resiudals", col = "blue") #plot residuals to ensure forecast error are normally distributed with mean zero
 ```
+<img src="https://user-images.githubusercontent.com/54876028/116273338-a9535d80-a74f-11eb-8256-f27d271ae353.png" width="300" height="250"/> <img src="https://user-images.githubusercontent.com/54876028/116273402-b6704c80-a74f-11eb-8ab9-c81e109fc04f.png" width="300" height="250"/> <img src="https://user-images.githubusercontent.com/54876028/116273480-c556ff00-a74f-11eb-8806-8b5bac741198.png" width="300" height="250"/> 
+
+
 
 Now, for time series with an increading or decreasing trend, we can use *Holt's Exponential Smoothing* to make short term forecasts. This method is similar to the simple exponential smoothing forecast method above, except both alpha and beta parameters are used. 
 
