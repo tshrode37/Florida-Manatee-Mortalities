@@ -222,9 +222,28 @@ holt_manatee$fitted #get forecast values for original time series (1974-2020)
 plot(holt_manatee) #plot original time series against forecasts 
 ```
 
+To use the fitted model for forecasting, we can use the commands below. Plot Name: `SES_forecast_alpha.png`.
+
+```R
+holt_forecast <- forecast:::forecast.HoltWinters(holt_manatee, h= 10) #forecast using Holt Winters
+holt_forecast #print forecast values
+plot(holt_forecast) #plot forecast values
+```
+
+Finally, we need to determine if the model cannot be improved upon. We can do this by checking correlations between forecast erros for successive predictions with an ACF plot. If there are correlations, this would indicate that the simple exponential smoothing forecasts could be improved with another forecasting techniquue. To test whether there are non-zero correlations, we can use a *Ljung-Box Test*. If the p-value is greater than 0.05, this indicated that there is little evidence of non-zero correlations. Then, we check whether the forecast errors are normally distributed with mean zero (histogram of forecast residuals) and constant variance (plot forecast residuals). Plot Names (in order as they appear below): `SES_ACFresiduals_alpha.png`, `SES_residuals_alpha.png`, `SES_residualsHist_alpha.png`.
+ 
+ 
+```R
+ggAcf(holt_forecast$residuals, lag.max = 30) #ACF plot to see if there are correlations between forecast errors for successive predictions
+Box.test(holt_forecast$residuals, lag = 30,type="Ljung-Box") #test whether there is significant evidence for non-zero correlations
+
+plot.ts(holt_forecast$residuals) #plot residuals to ensure forecast error have constant variance
+hist(holt_forecast$residuals, main = "Histogram of Simple Holt-Winters Resiudals", col = "blue") #plot residuals to ensure forecast error are normally distributed with mean zero
+```
+
+Now, for time series with an increading or decreasing trend, we can use *Holt's Exponential Smoothing* to make short term forecasts. This method is similar to the simple exponential smoothing forecast method above, except both alpha and beta parameters are used. 
 
 
-Plot Name: `SES_forecast_alpha.png`.
 
 ### ARIMA - AutoRegressive Integrated Moving Average
 
@@ -245,6 +264,12 @@ The plot above decreases slowing and doesn't drop to zero until Lag 18  make
 * *p* = order of the autoregressive part
 * *d* = degree of first differencing involved
 * *q* = order of the moving average part.
+
+
+## Summary of Results
+
+
+
 
 ## For the Future
 
