@@ -248,35 +248,94 @@ hist(holt_forecast$residuals, main = "Histogram of Simple Holt-Winters Resiudals
 
 
 
-Now, for time series with an increading or decreasing trend, we can use *Holt's Exponential Smoothing* to make short term forecasts. This method is similar to the simple exponential smoothing forecast method above, except both alpha and beta parameters are used. 
+Now, for time series with an increading or decreasing trend, we can use *Holt's Exponential Smoothing* to make short term forecasts. This method is similar to the simple exponential smoothing forecast method above, except both alpha and beta parameters are used. To use both alpha and beta parameters, we will set `gamma = FALSE`. 
+
+```R
+holt_manatee2 <- HoltWinters(total_manatee_ts, gamma = FALSE) # fit exponential model 
+holt_manatee2 #print estimated alpha and beta parameters
+holt_manatee2$fitted #get forecast values for original time series (1974-2020) 
+plot(holt_manatee2) #plot original time series against forecasts
+```
+<img src="https://user-images.githubusercontent.com/54876028/116275766-e6205400-a751-11eb-9838-e45f83a948cd.png" width="550" height="500"/>
+
+To use the fitted model for forecasting, we can use the commands below. 
+
+```R
+holt_forecast2 <- forecast:::forecast.HoltWinters(holt_manatee2) #forecast using Holt Winters
+holt_forecast2 #print forecast values
+plot(holt_forecast2) #plot forecast values
+```
+<img src="https://user-images.githubusercontent.com/54876028/116276060-254ea500-a752-11eb-9971-24e6f36614c2.png" width="550" height="500"/>
+
+Similar to the steps up, we need to check correlations between forecast errors for successive predictions with an ACF plot and test whether there are non-zero correlations bu using a *Ljung-Box Test*. Then, we check whether the forecast errors are normally distributed with mean zero (histogram of forecast residuals) and constant variance (plot forecast residuals). 
+
+```R
+ggAcf(holt_forecast2$residuals, lag.max = 30) #ACF plot to see if there are correlations between forecast errors for successive predictions
+Box.test(holt_forecast2$residuals, lag = 30,type="Ljung-Box") #test whether there is significant evidence for non-zero correlations
+plot(holt_forecast2$residuals) #plot residuals to ensure forecast error have constant variance
+hist(holt_forecast2$residuals, main = "Histogram of Simple Holt-Winters Resiudals", col = "maroon") #plot residuals to ensure forecast error are normally distributed with mean zero
+```
+
+<img src="https://user-images.githubusercontent.com/54876028/116276956-03a1ed80-a753-11eb-8625-034a4e151c9a.png" width="300" height="250"/> <img src="https://user-images.githubusercontent.com/54876028/116277008-0e5c8280-a753-11eb-848e-f831dd34d9e8.png" width="300" height="250"/> <img src="https://user-images.githubusercontent.com/54876028/116277038-161c2700-a753-11eb-8cce-fecd1b380daa.png" width="300" height="250"/> 
 
 
+### ARIMA - AutoRegressive (AR) Integrated Moving Average (MA)
 
-### ARIMA - AutoRegressive Integrated Moving Average
-
-Before we begin building our ARIMA models, we need to test if our time series is stationary. A time series is considered stationary if the mean value of time series is constant over time (this implies that the trend component is nullified), the variance does not increase over time, and seasonality is minimal. To test if our data is stationary, we can use an "Augmented Dickey-Fuller Test", and if the test returns a p-value less than 0.05, the time series is considered stationary. 
+Another method to forecast time series is using AutoRegressive Integrated Moving Average (ARIMA) models. Before we begin building and discussing our ARIMA models, we need to test if our time series is stationary. A time series with trends and/or seasonality will affect the value of the time series at different times. A time series is considered stationary if the mean value of time series is constant over time (this implies that the trend component is nullified), the variance does not increase over time, and seasonality is minimal. To test if our data is stationary, we can use an "Augmented Dickey-Fuller Test", and if the test returns a p-value less than 0.05, the time series is considered stationary. 
 
 ```R
 adf.test(total_manatee_ts, alternative = "stationary") # test if we have a stationary time series: p > 0.05, so not stationary
 ```
-Another method to identify a non-stationary time series is to use an ACF (autocorrelation) plot. If the time series is stationary, the ACF plot will decrease slowly. If the time series has seasonality, the ACF plot will have a "scalloped" shape. Plot Name: `nonstationary_timeseries_ACF.png`
+The ADF test results above indicate that our time series is not stationary, since the p-value is 0.09986, which is greater than 0.05. Another method to identify a non-stationary time series is to use an ACF (autocorrelation) plot. If the time series is stationary, the ACF plot will decrease slowly. If the time series has seasonality, the ACF plot will have a "scalloped" shape. 
 
 ```R
 ggAcf(total_manatee_ts, lag = 30) #ACF plot
 ```
-The plot above decreases slowing and doesn't drop to zero until Lag 18  make 
+<img src="https://user-images.githubusercontent.com/54876028/116280579-d35c4e00-a756-11eb-80cd-6f06a81ae03b.png" width="550" height="500"/>
 
+The plot above decreases slowing and doesn't drop to zero until Lag 18, which also suggests that our time series is not stationary. One way to make a non-stationary time series stationary is to compute the differences between consecutive obervations. This method is known as **differencing**. This method can help stabilize the mean of a time series by removing the changes in the level of the time series, which eliminates, or at least reduces, trend and seasonality. To perform differencing, we can use the **diff()** function. Using this data, we can use the ADF test to test if the differenced time series is stationary. The resulting p-value from the ADF test is less than 0.01 which indicates that first-order differencing the time series creates a stationary time series. 
 
+```R
+manatee_diff_ts <- diff(total_manatee_ts)
+ggAcf(manatee_diff_ts, lag = 30) #ACF plot for differenced time series
+autoplot(manatee_diff_ts)
+```
+<img src="https://user-images.githubusercontent.com/54876028/116282888-4d8dd200-a759-11eb-835e-1888834c3b39.png" width="450" height="400"/> <img src="https://user-images.githubusercontent.com/54876028/116282916-54b4e000-a759-11eb-9fd6-907ab4d7373c.png" width="450" height="400"/>
+
+Now that we have a stationary time series, we can determine the appropriate *p*, *d*, and *q* values for an `ARIMA(p,d,q)` model.
 
 * *p* = order of the autoregressive part
 * *d* = degree of first differencing involved
 * *q* = order of the moving average part.
 
+There are a special cases of the ARIMA model, which are good to note because once we start combining components to form more complicated models, it is much easier to work with the backshift notation (when working with time series lags). 
+
+* White noise: ARIMA(0,0,0)
+* Random Walk (First-Order differenced time series): ARIMA(0,1,0) with no constant
+* Random Walk with Drift: ARIMA(0,1,0) with a constant
+* Autoregression: ARIMA(p,0,0)
+* Moving Average: ARIMA(0,0,q)
+
+It can be difficult to select appropriate values for *p*, *d*, and *q*, so we can use the `auto.arima()` function in R.
+
+```R
+fit <- auto.arima(total_manatee_ts, seasonal = FALSE)
+```
+
+The selected model for our time series is a ARIMA(2,1,2) with drift model. 
+
+```r
+fit %>% forecast(h = 10) %>% autoplot()
+```
+<img src="https://user-images.githubusercontent.com/54876028/116285830-87140c80-a75c-11eb-8d7c-4f72ad86ab7f.png" width="550" height="500"/>
+
+
+
 
 ## Summary of Results
 
 * alpha and beta estimates for each SES model
-* 
+* adf test results
 
 
 ## For the Future
