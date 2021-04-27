@@ -304,9 +304,9 @@ autoplot(manatee_diff_ts)
 
 Now that we have a stationary time series, we can determine the appropriate *p*, *d*, and *q* values for an `ARIMA(p,d,q)` model.
 
-* *p* = order of the autoregressive part
-* *d* = degree of first differencing involved
-* *q* = order of the moving average part.
+* *p* = order of the autoregressive part - determined by viewing PACF plot
+* *d* = degree of first differencing involved - determined by differencing the time series data
+* *q* = order of the moving average part - determined by viewing ACF plot
 
 There are a special cases of the ARIMA model, which are good to note because once we start combining components to form more complicated models, it is much easier to work with the backshift notation (when working with time series lags). 
 
@@ -329,13 +329,48 @@ fit %>% forecast(h = 10) %>% autoplot()
 ```
 <img src="https://user-images.githubusercontent.com/54876028/116285830-87140c80-a75c-11eb-8d7c-4f72ad86ab7f.png" width="550" height="500"/>
 
+To check the residuals of our model forecasts, we can use the code below.
 
+```R
+checkresiduals(fit)
+```
+<img src="https://user-images.githubusercontent.com/54876028/116290412-6e5a2580-a761-11eb-835c-daaa007f0d65.png" width="550" height="500"/>
+
+Now, while automated models are beneficial, we can still fit the model manually by using the `Arima()` function. It should be noted that by using this function, we would be able to apply the estimated model to new data, even though this function is recommended. We can fit an ARIMA model manually by using the following general approach:
+
+1. Plot data
+2. Transform data to stabilize variance if necessary
+3. Take first differences of the data until the data are stationary
+4. Examine the ACF/PACF (partial autocorrelogram) plots and choose approproate ARIMA models
+5. Try chosen model and use the AICc to search for a better model. We want to minimalize the Akaike’s Information Criterion (AIC)
+6. Check residuals
+7. Calculate forecasts once the residuals look like white noise
+
+We have already plotted the data, which shows that our time series has an upward trend, but does not indicate changes in variance. We have also shown that the time series is non-stationary but by taking the first difference of the data, our time series is stationary. 
+
+```r
+total_manatee_ts %>% diff() %>% ggtsdisplay(main = "")
+```
+<img src="https://user-images.githubusercontent.com/54876028/116292267-82068b80-a763-11eb-9750-c435edaa100c.png" width="550" height="500"/>
+
+The PACF plot above suggests an AR(2) model. Thus, an initial candidate model is an ARIMA(2,1,0) model. We will fit this model along with variations including ARIMA(3,1,0), ARIMA(3,1,1), ARIMA(2,1,1). Of these, the ARIMA(2,1,0) has a slightlt smaller AICc value.
+
+
+<img src="https://user-images.githubusercontent.com/54876028/116293498-faba1780-a764-11eb-9626-760bef44f80f.png" width="550" height="500"/>
+
+Now, we check forecast residuals.
+
+```r
+checkresiduals(fit2)
+```
+<img src="https://user-images.githubusercontent.com/54876028/116293602-16252280-a765-11eb-91fd-7dcfd88da503.png" width="550" height="500"/>
 
 
 ## Summary of Results
 
 * alpha and beta estimates for each SES model
-* adf test results
+* 80% and 95% intervals for each model
+* 
 
 
 ## For the Future
