@@ -52,7 +52,7 @@ Using the requested data above, we then convert the data to a BeautifulSoup obje
 soup = bs(res.content, 'lxml') #Convert to Beautiful Soup object
 ```
 
-Now, to locate the information we need from the website, we can go to the FWC website (the URL specified above), use the command `ctrl-shift-I` to inspect the webpage, navigate to the section of the page that highlights the necessary information. Usually, this is embedded in "<div>" tags.
+Now, to locate the information we need from the website, we can go to the FWC website (the URL specified above), use the command `ctrl-shift-I` to inspect the webpage, navigate to the section of the page that highlights the necessary information. Usually, this is embedded in `<div>` tags.
 
 ```python
 summary_files = soup.find_all('div', {'class': 'stacked single-list brown'}) #find class from inspecting website
@@ -64,7 +64,7 @@ To display the number of items in the `summary_files` object, we can use the com
 len(summary_files)
 ```
 
-There is only one item, thus we will use the command `summary_files[0]`. By printing this information, we can see that the links are embedded in  "<a>" tags. To find a link from the `summary_files[0]` variable, we can use the command:
+There is only one item  thus we will use the command `summary_files[0]`. By printing this information, we can see that the links are embedded in  `<a>` tags. To find a link from the `summary_files[0]` variable, we can use the command:
   
 ```python
 summary_files[0].find('a') #find a link from webpage list of links
@@ -368,9 +368,21 @@ checkresiduals(fit2)
 
 ## Summary of Results
 
-* alpha and beta estimates for each SES model
-* 80% and 95% intervals for each model
-* 
+For 2021
+
+Model        | Alpha (α)     | Beta (β) | Gamma (γ)  | SSE  | Forecast | Lo. 80 | Hi. 80 | Lo. 95 | Hi. 95  
+Simple Exponential Smoothing | 0.3367 | NA | NA | 590679.3  | 619.8591 | 482.2740 | 757.4442 | 409.4408 | 830.2774  
+Exponential Smoothing | 0.1031 | 0.4452 | NA | 490796.7  | 673.9750 | 538.6527 | 809.2973 | 467.0174 | 880.9326 
+
+
+Model  |  Log Likelihood    |  AIC | AICc | Forecast | Lo. 80 | Hi. 80 | Lo. 95 | Hi. 95 
+ARIMA(2,1,2) with Drift  |  -272.93    |  557.87 | 560.02 | 682.7488 | 562.1076 | 803.3900 | 498.2440 | 867.2536 
+ARIMA(2,1,0)  |  -281.56    |  569.13 | 569.7 | 722.2882 | 579.1161 | 865.4602 | 503.3254 | 941.2509
+ARIMA(3,1,0)  |  -281.52    |  571.04 | 572.02 | 714.9832 | 570.3012 | 859.6653 | 493.7112 | 936.2553
+ARIMA(3,1,1)  |  -281.27    |  572.54 | 574.04 | 692.7243 | 547.1833 | 838.2653 | 470.1385 | 915.31
+ARIMA(2,1,1)  |  -281.38    |  570.76  | 571.73 | 692.0838 | 547.8892 | 836.2785 | 471.5571 | 912.6105 
+
+
 
 
 ## For the Future
