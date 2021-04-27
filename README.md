@@ -268,7 +268,8 @@ The plot above decreases slowing and doesn't drop to zero until Lag 18  make
 
 ## Summary of Results
 
-
+* alpha and beta estimates for each SES model
+* 
 
 
 ## For the Future
@@ -290,5 +291,5 @@ The plot above decreases slowing and doesn't drop to zero until Lag 18  make
 13. re.search(): https://www.w3schools.com/python/python_regex.asp
 14. Create empty dataframe and append rows: https://www.geeksforgeeks.org/create-a-pandas-dataframe-from-lists/
 15. Stationary Time Series + Stationary Time Series: http://r-statistics.co/Time-Series-Analysis-With-R.html
-16. Alpha, Beta, Gamma Exponential Smoothing: https://docs.rapidminer.com/9.3/studio/operators/modeling/time_series/forecasting/holt-winters_trainer.html
+16. Alpha, Beta, Gamma - Exponential Smoothing: https://docs.rapidminer.com/9.3/studio/operators/modeling/time_series/forecasting/holt-winters_trainer.html
 17. Forecasting and Transformations: https://otexts.com/fpp2/
