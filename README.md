@@ -30,8 +30,7 @@ Anaconda version 4.8.3, Tableau Desktop version 2019.3, and R version 4.0.3 was 
    * `import pandas as pd`: Convert to pandas DF
    * `import os.path`: Check if file exists for a desired folder/path
    * `import re`: Search if string exists in dataframe row
-* Tableau![fl_manatee](https://user-images.githubusercontent.com/54876028/116428886-5642de80-a813-11eb-870f-27f0eae5c1c3.jpg)![county_coverage_map2](https://user-images.githubusercontent.com/54876028/116429148-9c983d80-a813-11eb-822f-94103d9c8734.jpg)
-
+* Tableau
 
 * R
   * `library(dplyr)`: Used for data manipulation
