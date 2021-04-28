@@ -381,10 +381,10 @@ Model        | Alpha (α)     | Beta (β) | Gamma (γ)  | SSE  | Forecast | Lo. 
 Simple Exponential Smoothing | 0.3367 | NA | NA | 590679.3  | 619.8591 | 482.2740 | 757.4442 | 409.4408 | 830.2774  
 Exponential Smoothing | 0.1031 | 0.4452 | NA | 490796.7  | 673.9750 | 538.6527 | 809.2973 | 467.0174 | 880.9326 
 
-It should be noted that the Simple Exponential Smoothing has a "flat" forecast function, which means that all forecasts take the same value. In other words, the forecast model for 2021 to 2030 are all 619.8591, which can be seen in the first forecasting plot in the *Exponential Smoothing* section. As mentioned in that section, alpha and beta have values between 0 and 1, and values that are close to zero suggest that little weight is placed on the most recent observations when making forecasts of future values. In other words, the alpha (level of smoothing) value for the Simple Exponential Smoothing model suggests that the forecasts of future values rely mostly on older observations, which is similar to the alpha value for the Exponential Smoothing model. However, the beta (trend component) suggests that both recent and older observations are determinig forecast values. 
+It should be noted that the Simple Exponential Smoothing has a "flat" forecast function, which means that all forecasts take the same value. In other words, the forecast model for 2021 to 2030 are all 619.8591, which can be seen in the first forecasting plot in the *Exponential Smoothing* section. As mentioned in that section, alpha and beta have values between 0 and 1, and values that are close to zero suggest that little weight is placed on the most recent observations when making forecasts of future values. In other words, the alpha (level of smoothing) value for the Simple Exponential Smoothing model suggests that the forecasts of future values rely mostly on older observations, which is similar to the alpha value for the Exponential Smoothing model. However, the beta (trend component) suggests that both recent and older observations are determinig forecast values. From the table above, the Exponential Smoothing model is a better fit due to the smaller SSE (sum of squared errors) value. 
 
 
-The first modeling technique used was the ARIMA technique. The 80% prediction interval for the 2021 forecast, and a 95% prediction interval for the 2021 forecast are in the table below. 
+The second modeling technique used was the ARIMA technique. The 80% prediction interval for the 2021 forecast, and a 95% prediction interval for the 2021 forecast are in the table below. 
 
 Model  |  Log Likelihood    |  AIC | AICc | Forecast | Lo. 80 | Hi. 80 | Lo. 95 | Hi. 95 
 -----  |  -----    |  -----  | -----  | -----  | -----  |-----  |-----  |-----  
@@ -393,6 +393,8 @@ ARIMA(2,1,0)  |  -281.56    |  569.13 | 569.7 | 722.2882 | 579.1161 | 865.4602 |
 ARIMA(3,1,0)  |  -281.52    |  571.04 | 572.02 | 714.9832 | 570.3012 | 859.6653 | 493.7112 | 936.2553
 ARIMA(3,1,1)  |  -281.27    |  572.54 | 574.04 | 692.7243 | 547.1833 | 838.2653 | 470.1385 | 915.31
 ARIMA(2,1,1)  |  -281.38    |  570.76  | 571.73 | 692.0838 | 547.8892 | 836.2785 | 471.5571 | 912.6105 
+
+Recall from above, we want our model to minimize the AICc value. Thus, the "better" ARIMA model is the ARIMA(2,1,2) with Drift model that was created using the `auto.arima()` function. This model forecasts that there will be a total of ~682 manatee mortalities, whereas the model above forecasts ~620 manatee mortalities for 2021.
 
 ### Evaluating Forecast Accuracy
 
