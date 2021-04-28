@@ -1,9 +1,10 @@
 # Using time series analysis to forecast the number of mortalities for the Florida Manatee
 Data Science Practicum II Project - Forecasting Florida Manatee Mortalities
 
+
 <img src="https://user-images.githubusercontent.com/54876028/116429766-2f38dc80-a814-11eb-9c36-14c368ad88f5.jpg" width="450" height="550"/>
 
-
+  
 ## Summary
 
 One major issue in the state of Florida is trying to increase the manatee population. Until recently, the Florida manatee was listed as endangered under the Endangered Species Act (ESA). Identifying areas where manatee deaths occur the most and identifying the major cause of death for this species can be crucial information when deciding the best course of action in protecting and growing the manatee population. By using time series data, which refers to observations that are collected sequentially in time, we can build a model to predict future values of the time series. Forecasting allows us to take the models fit on the historical data and use them to predict future observations.
@@ -372,16 +373,19 @@ checkresiduals(fit2)
 
 ## Summary of Results
 
-For 2021
+When determining the forecasting model for your data, there are various considerations that need to be made. A few include the amount of available data, the type of data (weekly, monthly, quarterly, annually), the forecasting horizon (will forecasting be required for one month in advance, one year, ten years, etc), and whether the data is trending or has seasonality. Our data did not have any seasonality, since we used annual data, but the data was in an upward trend. For this type of data, the two mostly used models include Exponential Smoothing and ARIMA models.  
+
+The first modeling technique used was Exponential Smoothing. The 80% prediction interval for the 2021 forecast, and a 95% prediction interval for the 2021 forecast are in the table below. 
 
 Model        | Alpha (α)     | Beta (β) | Gamma (γ)  | SSE  | Forecast | Lo. 80 | Hi. 80 | Lo. 95 | Hi. 95  
 -----  |  -----    |  -----  | -----  | -----  | -----  |-----  |-----  |-----  | -------
 Simple Exponential Smoothing | 0.3367 | NA | NA | 590679.3  | 619.8591 | 482.2740 | 757.4442 | 409.4408 | 830.2774  
 Exponential Smoothing | 0.1031 | 0.4452 | NA | 490796.7  | 673.9750 | 538.6527 | 809.2973 | 467.0174 | 880.9326 
 
+It should be noted that the Simple Exponential Smoothing has a "flat" forecast function, which means that all forecasts take the same value. In other words, the forecast model for 2021 to 2030 are all 619.8591, which can be seen in the first forecasting plot in the *Exponential Smoothing* section. As mentioned in that section, alpha and beta have values between 0 and 1, and values that are close to zero suggest that little weight is placed on the most recent observations when making forecasts of future values. In other words, the alpha (level of smoothing) value for the Simple Exponential Smoothing model suggests that the forecasts of future values rely mostly on older observations, which is similar to the alpha value for the Exponential Smoothing model. However, the beta (trend component) suggests that both recent and older observations are determinig forecast values. 
 
 
-
+The first modeling technique used was the ARIMA technique. The 80% prediction interval for the 2021 forecast, and a 95% prediction interval for the 2021 forecast are in the table below. 
 
 Model  |  Log Likelihood    |  AIC | AICc | Forecast | Lo. 80 | Hi. 80 | Lo. 95 | Hi. 95 
 -----  |  -----    |  -----  | -----  | -----  | -----  |-----  |-----  |-----  
@@ -393,10 +397,18 @@ ARIMA(2,1,1)  |  -281.38    |  570.76  | 571.73 | 692.0838 | 547.8892 | 836.2785
 
 
 
+Model  |    RMSE | MAE | MAPE | MASE | 
+-----  |    -----  | -----  | -----  | -----  
+Exponential Smoothing  |  -----  | -----  | -----  | -----
+ARIMA(2,1,2)  |  -----     | -----  | -----  | -----
+
+
+<img src="https://user-images.githubusercontent.com/54876028/116443934-3c5cc800-a822-11eb-960f-a1bbb2c7cf17.png" width="550" height="500"/>
+
 
 ## For the Future
 
-For the future of this project, other forecasting methods can be explored such as dynamic regression models, neural network models, or bootstrapping and bagging methods. Comparing other models and the results, a more appropriate model can be chosen and be applied to new data if needed. Another future project idea would be to build forecasting models for the yearly totals for each cause of death (Natural, Human, etc). By analyzing these models, we can estimate which cause of death may have the most impact on the manatee population and focus on protecting the manatees. Further, forecasting models for yearly totals by county can be analyzed to identify the counties with the highest mortalities and which are predicted to have the most manatee mortalities. This combined information would be 
+For the future of this project, other forecasting methods can be explored such as dynamic regression models, neural network models, or bootstrapping and bagging methods. This allows us to compare more models, which then allows us to choose a more appropriate model and apply to new data. Another future project idea would be to build forecasting models for the yearly totals for each cause of death (Natural, Human, etc). By analyzing these models, we can estimate which cause of death may have the most impact on the manatee population and focus on protecting the manatees. Further, forecasting models for yearly totals by county can be analyzed to identify the counties with the highest mortalities and which are predicted to have the most manatee mortalities. This combined information would be beneficial in taking steps to protect the Florida manatees.  
 
 ## Resources
 1. Manatee Critical Habitat Map: https://www.fws.gov/southeast/wildlife/mammals/manatee/
@@ -417,4 +429,6 @@ For the future of this project, other forecasting methods can be explored such a
 16. Dplyr library: https://dplyr.tidyverse.org/
 17. Stationary Time Series + Stationary Time Series: http://r-statistics.co/Time-Series-Analysis-With-R.html
 18. Alpha, Beta, Gamma - Exponential Smoothing: https://docs.rapidminer.com/9.3/studio/operators/modeling/time_series/forecasting/holt-winters_trainer.html
+  a. https://docs.tibco.com/pub/enterprise-runtime-for-R/4.0.0/doc/html/Language_Reference/stats/HoltWinters.html 
 19. Forecasting and Transformations: https://otexts.com/fpp2/
+20. Forecast Accuracy: https://uc-r.github.io/ts_benchmarking
