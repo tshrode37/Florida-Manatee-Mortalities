@@ -1,6 +1,8 @@
 # Using time series analysis to forecast the number of mortalities for the Florida Manatee
 Data Science Practicum II Project - Forecasting Florida Manatee Mortalities
 
+<img src="https://user-images.githubusercontent.com/54876028/116429766-2f38dc80-a814-11eb-9c36-14c368ad88f5.jpg" width="450" height="550"/>
+
 
 ## Summary
 
@@ -27,7 +29,9 @@ Anaconda version 4.8.3, Tableau Desktop version 2019.3, and R version 4.0.3 was 
    * `import pandas as pd`: Convert to pandas DF
    * `import os.path`: Check if file exists for a desired folder/path
    * `import re`: Search if string exists in dataframe row
-* Tableau
+* Tableau![fl_manatee](https://user-images.githubusercontent.com/54876028/116428886-5642de80-a813-11eb-870f-27f0eae5c1c3.jpg)![county_coverage_map2](https://user-images.githubusercontent.com/54876028/116429148-9c983d80-a813-11eb-822f-94103d9c8734.jpg)
+
+
 * R
   * `library(dplyr)`: Used for data manipulation
   * `library(tseries)`: Converts data to a time series object
@@ -392,23 +396,25 @@ ARIMA(2,1,1)  |  -281.38    |  570.76  | 571.73 | 692.0838 | 547.8892 | 836.2785
 
 ## For the Future
 
+For the future of this project, other forecasting methods can be explored such as dynamic regression models, neural network models, or bootstrapping and bagging methods. Comparing other models and the results, a more appropriate model can be chosen and be applied to new data if needed. Another future project idea would be to build forecasting models for the yearly totals for each cause of death (Natural, Human, etc). By analyzing these models, we can estimate which cause of death may have the most impact on the manatee population and focus on protecting the manatees. Further, forecasting models for yearly totals by county can be analyzed to identify the counties with the highest mortalities and which are predicted to have the most manatee mortalities. This combined information would be 
 
 ## Resources
-1. Manatee ESA: https://www.mmc.gov/priority-topics/species-of-concern/florida-manatee/ 
-2. 1974 to 2019 Yearly Mortality Summaries: https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/yearly/
-3. 2020 Yearly Mortality Summary: https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/2020/
-4. GET request: https://www.w3schools.com/tags/ref_httpmethods.asp
-5. BeautifulSoup object: https://programminghistorian.org/en/lessons/intro-to-beautiful-soup
-6. Tabula Documentation: https://tabula-py.readthedocs.io/en/latest/tabula.html
-7. Use Tabula to Read PDF: https://github.com/chezou/tabula-py
-8. Manatee Mortality Data (1974-2019): https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/yearly/
-9. Manatee 2020 Mortality Data: https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/2020/
-10. Convert pandas DF to CSV: https://datatofish.com/export-dataframe-to-csv/
-11. Add year to column: https://stackoverflow.com/questions/20025882/add-a-string-prefix-to-each-value-in-a-string-column-using-pandas
-12. Rename columns: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rename.html
-13. re.search(): https://www.w3schools.com/python/python_regex.asp
-14. Create empty dataframe and append rows: https://www.geeksforgeeks.org/create-a-pandas-dataframe-from-lists/
-15. Dplyr library: https://dplyr.tidyverse.org/
-16. Stationary Time Series + Stationary Time Series: http://r-statistics.co/Time-Series-Analysis-With-R.html
-17. Alpha, Beta, Gamma - Exponential Smoothing: https://docs.rapidminer.com/9.3/studio/operators/modeling/time_series/forecasting/holt-winters_trainer.html
-18. Forecasting and Transformations: https://otexts.com/fpp2/
+1. Manatee Critical Habitat Map: https://www.fws.gov/southeast/wildlife/mammals/manatee/
+2. Manatee ESA: https://www.mmc.gov/priority-topics/species-of-concern/florida-manatee/ 
+3. 1974 to 2019 Yearly Mortality Summaries: https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/yearly/
+4. 2020 Yearly Mortality Summary: https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/2020/
+5. GET request: https://www.w3schools.com/tags/ref_httpmethods.asp
+6. BeautifulSoup object: https://programminghistorian.org/en/lessons/intro-to-beautiful-soup
+7. Tabula Documentation: https://tabula-py.readthedocs.io/en/latest/tabula.html
+8. Use Tabula to Read PDF: https://github.com/chezou/tabula-py
+9. Manatee Mortality Data (1974-2019): https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/yearly/
+10. Manatee 2020 Mortality Data: https://myfwc.com/research/manatee/rescue-mortality-response/statistics/mortality/2020/
+11. Convert pandas DF to CSV: https://datatofish.com/export-dataframe-to-csv/
+12. Add year to column: https://stackoverflow.com/questions/20025882/add-a-string-prefix-to-each-value-in-a-string-column-using-pandas
+13. Rename columns: https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rename.html
+14. re.search(): https://www.w3schools.com/python/python_regex.asp
+15. Create empty dataframe and append rows: https://www.geeksforgeeks.org/create-a-pandas-dataframe-from-lists/
+16. Dplyr library: https://dplyr.tidyverse.org/
+17. Stationary Time Series + Stationary Time Series: http://r-statistics.co/Time-Series-Analysis-With-R.html
+18. Alpha, Beta, Gamma - Exponential Smoothing: https://docs.rapidminer.com/9.3/studio/operators/modeling/time_series/forecasting/holt-winters_trainer.html
+19. Forecasting and Transformations: https://otexts.com/fpp2/
