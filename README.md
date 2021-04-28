@@ -398,18 +398,24 @@ Recall from above, we want our model to minimize the AICc value. Thus, the "bett
 
 ### Evaluating Forecast Accuracy
 
-Model  |    RMSE | MAE | MAPE | MASE | 
------  |    -----  | -----  | -----  | -----  
-Exponential Smoothing  |  -----  | -----  | -----  | -----
-ARIMA(2,1,2)  |  -----     | -----  | -----  | -----
+One way to evaluate our forecast accuracy is to create a training and testing dataset, where the training set is used to estimate any parameters of the forecasting method and the testing data is used to evaluate the model's accuracy. Now, the training set is usually compromised of the first 75-80% of the time series data, while the testing set is the remaining 20-25%. Using the training dataset for the Exponential Smoothing and the ARIMA(2,1,2) model, we obtain the following results. 
 
+Model  |    RMSE | MAE | MAPE | 
+-----  |    -----  | -----  | -----    
+Exponential Smoothing  |  174.02882  | 120.97609  | 19.67884  
+ARIMA(2,1,2)  | 264.76398   | 206.96896  | 21.54833
+
+The two most commonly used measures are the Mean Absolute Error (MAE) and the Root Mean Squared Error (RMSE). Usually, the MAE is to compare forecast methods since is it easy to understand and compute. However, the RMSE is widely used. The Mean Absolute Percentage Error (MAPE) is unit-free, which makes it frequently used to compare forecast performances. With either measure used, the results above suggest that the Exponential Smoothing method is the better method. We can also plot the results. 
 
 <img src="https://user-images.githubusercontent.com/54876028/116443934-3c5cc800-a822-11eb-960f-a1bbb2c7cf17.png" width="550" height="500"/>
 
+The plot above also suggests that the Exponental Smoothing model is the better model. However, other models should be explored.
 
 ## For the Future
 
-For the future of this project, other forecasting methods can be explored such as dynamic regression models, neural network models, or bootstrapping and bagging methods. This allows us to compare more models, which then allows us to choose a more appropriate model and apply to new data. Another future project idea would be to build forecasting models for the yearly totals for each cause of death (Natural, Human, etc). By analyzing these models, we can estimate which cause of death may have the most impact on the manatee population and focus on protecting the manatees. Further, forecasting models for yearly totals by county can be analyzed to identify the counties with the highest mortalities and which are predicted to have the most manatee mortalities. This combined information would be beneficial in taking steps to protect the Florida manatees.  
+For the future of this project, other forecasting methods can be explored such as dynamic regression models, neural network models, or bootstrapping and bagging methods. This allows us to compare more models, which then allows us to choose a more appropriate model and apply to new data. In addition, we can explore other model evaluation techniques to identify the "best" model.
+
+Another future project idea would be to build forecasting models for the yearly totals for each cause of death (Natural, Human, etc). By analyzing these models, we can estimate which cause of death may have the most impact on the manatee population and focus on protecting the manatees. Further, forecasting models for yearly totals by county can be analyzed to identify the counties with the highest mortalities and which are predicted to have the most manatee mortalities. This combined information would be beneficial in taking steps to protect the Florida manatees.  
 
 ## Resources
 1. Manatee Critical Habitat Map: https://www.fws.gov/southeast/wildlife/mammals/manatee/
