@@ -29,6 +29,10 @@ autoplot(total_manatee_ts) +
 
 # gglagplot(total_manatee_ts, lags = 12) #lag plot
 
+## Create Training and Testing Datasets
+
+training <- window(total_manatee_ts, end = 2004) #subset to create training set, usually 75-80% of full set; earlier observations
+testing <- window(total_manatee_ts, start = 2005) #subset to create testing set, usually 20-25% of full set; later observations
 
 ## Forecasts using Holt's Simple Exponential Smoothing ---------------------------------------------------------
 
@@ -121,7 +125,32 @@ fit2 %>% forecast(h = 10)
 fit2 %>% forecast(h = 10) %>% autoplot()
 checkresiduals(fit2)
 
+## Evaluating Forecast Accuracy
 
+#ES model
+
+holt_train = HoltWinters(x = training, gamma = FALSE)
+holt_train
+holt_train_forecast <- forecast:::forecast.HoltWinters(holt_train, h= 16)
+accuracy(holt_train_forecast, testing)
+
+
+#ARIMA(2,1,2) with Drift
+
+train_fit <- Arima(training, seasonal = FALSE, order = c(2,1,2))
+train_fit
+arima_fit <- train_fit %>% forecast(h = 16)
+accuracy(arima_fit, testing)
+
+
+autoplot(total_manatee_ts) +
+  autolayer(holt_train_forecast, PI = FALSE, series = "Exponential") +
+  autolayer(arima_fit, PI = FALSE, series = "ARIMA") + 
+  ylab("Manatee Mortality Totals") + xlab("Year") + 
+  ggtitle("Manatee Mortality Forecasts (Yearly Ending 2020)") + 
+  guides(colour = guide_legend(title = "Forecast"))
+
+summary(arima_fit)
 
 ## Resources ---------------------------------------------------------
 
