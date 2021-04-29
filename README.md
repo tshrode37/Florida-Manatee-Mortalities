@@ -15,11 +15,11 @@ Using yearly manatee mortality summaries created by the wiildlife experts with t
 
 Wildlife experts with the FWC perform consistent, high quality postmortem examinations of manatee carcasses that they discover or that are reported to them. Results from the examinations are summarized and available to be searched by county, year, and probable cause of death. The data used for this project will be the yearly summaries for 1974 to 2020.
 
-Each yearly summary contains information for Florida counties that had manatee deaths and one row containing information for the total number of deaths by cause. There are approximately ~35 observations and 10 features in each yearly summary and 47 yearly summaries will be used. It should be noted that the older data (1974, 1975, etc.) may contain less data. This data will be collected using web-scraping techniques and then the `Tabula` module will extract the tables from the yearly summary PDF's and store them into a `pandas` DataFrame. Each set of data will then be saved as a `csv` file.
+Each yearly summary contains information for Florida counties that had manatee deaths and one row containing information for the total number of deaths by cause. There are approximately ~10 features in each yearly summary and 47 yearly summaries will be used. It should be noted that the older data (1974, 1975, etc.) may contain less data. This data will be collected using web-scraping techniques and the module `BeautifulSoup` and then the `Tabula` module will extract the data tables from the yearly summary PDF's and store them into a `pandas` DataFrame. Each set of data will then be saved as a `csv` file.
 
 ### Methodology
 
-Anaconda version 4.8.3, Tableau Desktop version 2019.3, and R version 4.0.3 was used to complete this project. Anaconda allowed us to utilize Jupyter Notebooks, which used Python version 3.7.4. Jupyter was used to scrape the FWC website and convert the data to `csv` files. Tableau was used for the exploratory data analysis (EDA) portion of the project. Finally, R was used to analyze the time series data and build the forecasting models. 
+Anaconda version 4.8.3, Tableau Desktop version 2019.3, and R version 4.0.3 was used to complete this project. Anaconda allowed us to utilize Jupyter Notebooks, which used Python version 3.7.4. Python was used to scrape the FWC website and convert the data to `csv` files. Tableau was used for the exploratory data analysis (EDA) portion of the project. Finally, R was used to analyze the time series data and build the forecasting models. 
 
 #### Tools and Libraries
 
@@ -56,7 +56,7 @@ Using the requested data above, we then convert the data to a BeautifulSoup obje
 soup = bs(res.content, 'lxml') #Convert to Beautiful Soup object
 ```
 
-Now, to locate the information we need from the website, we can go to the FWC website (the URL specified above), use the command `ctrl-shift-I` to inspect the webpage, navigate to the section of the page that highlights the necessary information. Usually, this is embedded in `<div>` tags.
+Now, to locate the information we need from the website, we can go to the FWC website (the URL specified above), use the command `ctrl-shift-I` to inspect the webpage, and then navigate to the section of the page that highlights the necessary information. Usually, this is embedded in `<div>` tags.
 
 ```python
 summary_files = soup.find_all('div', {'class': 'stacked single-list brown'}) #find class from inspecting website
@@ -68,7 +68,7 @@ To display the number of items in the `summary_files` object, we can use the com
 len(summary_files)
 ```
 
-There is only one item  thus we will use the command `summary_files[0]`. By printing this information, we can see that the links are embedded in  `<a>` tags. To find a link from the `summary_files[0]` variable, we can use the command:
+There is only one item, thus we will use the command `summary_files[0]` to obtain the necessary information. By printing this information, we can see that the links are embedded in  `<a>` tags. To find a link from the `summary_files[0]` variable, we can use the command:
   
 ```python
 summary_files[0].find('a') #find a link from webpage list of links
@@ -80,8 +80,7 @@ The output from this will look like: `<a href="/media/11661/1974yearsummary.pdf"
 summary_files[0].find('a').get('href') #get href
 ```
 
-The ouput will look like `'/media/11661/1974yearsummary.pdf'`. Now, to loop through the `summary_files[0]` variable, get all the "href" links, and add the links to a list, we can use the code below.
-
+The ouput will then look like `'/media/11661/1974yearsummary.pdf'`. Now, to loop through the `summary_files[0]` variable, get all the "href" links, and add the links to a list, we can use the code below.
 
 ```python
 #loop through summary_files and get all href's and add full link to list
@@ -180,7 +179,6 @@ Finally, each collected yearly summary was converted to a `csv` file, and a `csv
 
 The `Manatee_mortality_visuals.twb` file was used to create the visualizations for the EDA portion of the project. The visualizations can be found in the `Manatee_mortality_visuals.pptx` file. Both files are located in the "Visuals" folder. 
 
-
 ## Phase III - Predictive Analytics
 
 The `FloridaManateeForecasting.R` file was used to create and analyze various forecasting models. 
@@ -205,11 +203,6 @@ Next, we need to isolate the yearly totals, which can be done with the commands 
 
 ```R
 total_manatee_ts <-  ts(total_manatee$Total, start = c(1974, 1), frequency = 1) #convert to time series object for "total" column
-autoplot(total_manatee_ts) + 
-  geom_smooth() + 
-  labs(title = "Yearly Totals from 1974 to 2020",
-       y = "Totals",
-       x = "Year") #plot yearly totals
 ```
 
 <img src="https://user-images.githubusercontent.com/54876028/116270835-727c4800-a74d-11eb-8dc0-5e5c95add13a.png" width="650" height="600"/>
@@ -218,7 +211,7 @@ From the plot above, we can see that our data has an upward trend, but there doe
 
 ### Exponential Smoothing
 
-The simplest of exponentially smoothing methods is called *Simple Exponential Smoothing*, which is most suitable for data with no clear trend or seasonality. This method provides a way to make short-term forecasts and estimate that `alpha` parameter (level at the current time point). Values of alpha lie between 0 and 1, where a 0 means that little weight is placed on the most recent observations when making forecasts of future values. 
+The simplest of forecasting methods is called exponentially smoothing. The first modeling technique that we will be used it *Simple Exponential Smoothing*, which is most suitable for data with no clear trend or seasonality. This method provides a way to make short-term forecasts and estimate that `alpha` parameter (level at the current time point). Values of alpha lie between 0 and 1, where a 0 means that little weight is placed on the most recent observations when making forecasts of future values. 
 
 To do this in R, we need to set the `beta` and `gamma` parameters to false becuase beta specifies the coefficient for the trend and gamma specifies the coefficient for the seasonal smoothing. To fit a simple exponential smoothing predictive model, we will the `HoltWinters()` function. 
 ```R
@@ -238,7 +231,6 @@ plot(holt_forecast) #plot forecast values
 ```
 <img src="https://user-images.githubusercontent.com/54876028/116273128-7c9f4600-a74f-11eb-8204-3c5031d47fd1.png" width="550" height="500"/>
 
-
 Finally, we need to determine if the model cannot be improved upon. We can do this by checking correlations between forecast erros for successive predictions with an ACF plot. If there are correlations, this would indicate that the simple exponential smoothing forecasts could be improved with another forecasting techniquue. To test whether there are non-zero correlations, we can use a *Ljung-Box Test*. If the p-value is greater than 0.05, this indicated that there is little evidence of non-zero correlations. Then, we check whether the forecast errors are normally distributed with mean zero (histogram of forecast residuals) and constant variance (plot forecast residuals).  
  
 ```R
@@ -252,7 +244,7 @@ hist(holt_forecast$residuals, main = "Histogram of Simple Holt-Winters Resiudals
 
 
 
-Now, for time series with an increading or decreasing trend, we can use *Holt's Exponential Smoothing* to make short term forecasts. This method is similar to the simple exponential smoothing forecast method above, except both alpha and beta parameters are used. To use both alpha and beta parameters, we will set `gamma = FALSE`. 
+Now, for time series with an increasing or decreasing trend, we can use *Holt's Exponential Smoothing* to make short term forecasts. This method is similar to the simple exponential smoothing forecast method above, except both alpha and beta parameters are used. To use both alpha and beta parameters, we will set `gamma = FALSE`. 
 
 ```R
 holt_manatee2 <- HoltWinters(total_manatee_ts, gamma = FALSE) # fit exponential model 
@@ -262,30 +254,18 @@ plot(holt_manatee2) #plot original time series against forecasts
 ```
 <img src="https://user-images.githubusercontent.com/54876028/116275766-e6205400-a751-11eb-9838-e45f83a948cd.png" width="550" height="500"/>
 
-To use the fitted model for forecasting, we can use the commands below. 
+To use the fitted model for forecasting, we can use similar steps done for simple exponential smoothing. 
 
-```R
-holt_forecast2 <- forecast:::forecast.HoltWinters(holt_manatee2) #forecast using Holt Winters
-holt_forecast2 #print forecast values
-plot(holt_forecast2) #plot forecast values
-```
 <img src="https://user-images.githubusercontent.com/54876028/116276060-254ea500-a752-11eb-9971-24e6f36614c2.png" width="550" height="500"/>
 
-Similar to the steps up, we need to check correlations between forecast errors for successive predictions with an ACF plot and test whether there are non-zero correlations bu using a *Ljung-Box Test*. Then, we check whether the forecast errors are normally distributed with mean zero (histogram of forecast residuals) and constant variance (plot forecast residuals). 
-
-```R
-ggAcf(holt_forecast2$residuals, lag.max = 30) #ACF plot to see if there are correlations between forecast errors for successive predictions
-Box.test(holt_forecast2$residuals, lag = 30,type="Ljung-Box") #test whether there is significant evidence for non-zero correlations
-plot(holt_forecast2$residuals) #plot residuals to ensure forecast error have constant variance
-hist(holt_forecast2$residuals, main = "Histogram of Simple Holt-Winters Resiudals", col = "maroon") #plot residuals to ensure forecast error are normally distributed with mean zero
-```
+Now, we need to check correlations between forecast errors for successive predictions with an ACF plot and test whether there are non-zero correlations bu using a *Ljung-Box Test*. Then, we check whether the forecast errors are normally distributed with mean zero (histogram of forecast residuals) and constant variance (plot forecast residuals). 
 
 <img src="https://user-images.githubusercontent.com/54876028/116276956-03a1ed80-a753-11eb-8625-034a4e151c9a.png" width="300" height="250"/> <img src="https://user-images.githubusercontent.com/54876028/116277008-0e5c8280-a753-11eb-848e-f831dd34d9e8.png" width="300" height="250"/> <img src="https://user-images.githubusercontent.com/54876028/116277038-161c2700-a753-11eb-8cce-fecd1b380daa.png" width="300" height="250"/> 
 
 
 ### ARIMA - AutoRegressive (AR) Integrated Moving Average (MA)
 
-Another method to forecast time series is using AutoRegressive Integrated Moving Average (ARIMA) models. Before we begin building and discussing our ARIMA models, we need to test if our time series is stationary. A time series with trends and/or seasonality will affect the value of the time series at different times. A time series is considered stationary if the mean value of time series is constant over time (this implies that the trend component is nullified), the variance does not increase over time, and seasonality is minimal. To test if our data is stationary, we can use an "Augmented Dickey-Fuller Test", and if the test returns a p-value less than 0.05, the time series is considered stationary. 
+Another method to forecast time series is using AutoRegressive Integrated Moving Average (ARIMA) models. Before we begin building and discussing our ARIMA models, we need to test if our time series is stationary. A time series with trends and/or seasonality will affect the value of the time series at different times. A time series is considered stationary if the mean value of time series is constant over time (this implies that the trend and seasonality component are nullified). We want the variance to not increase over time, and ensure that seasonality is minimal. To test if our data is stationary, we can use an "Augmented Dickey-Fuller Test", and if the test returns a p-value less than 0.05, the time series is considered stationary. 
 
 ```R
 adf.test(total_manatee_ts, alternative = "stationary") # test if we have a stationary time series: p > 0.05, so not stationary
@@ -297,7 +277,7 @@ ggAcf(total_manatee_ts, lag = 30) #ACF plot
 ```
 <img src="https://user-images.githubusercontent.com/54876028/116280579-d35c4e00-a756-11eb-80cd-6f06a81ae03b.png" width="550" height="500"/>
 
-The plot above decreases slowing and doesn't drop to zero until Lag 18, which also suggests that our time series is not stationary. One way to make a non-stationary time series stationary is to compute the differences between consecutive obervations. This method is known as **differencing**. This method can help stabilize the mean of a time series by removing the changes in the level of the time series, which eliminates, or at least reduces, trend and seasonality. To perform differencing, we can use the **diff()** function. Using this data, we can use the ADF test to test if the differenced time series is stationary. The resulting p-value from the ADF test is less than 0.01 which indicates that first-order differencing the time series creates a stationary time series. 
+The plot above decreases slowly and doesn't drop to zero until Lag 18, which also suggests that our time series is not stationary. One way to make a non-stationary time series stationary is to compute the differences between consecutive obervations. This method is known as **differencing**. This method can help stabilize the mean of a time series by removing the changes in the level of the time series, which eliminates, or at least reduces, trend and seasonality. To perform differencing, we can use the **diff()** function. Using this data, we can use the ADF test to test if the differenced time series is stationary. The resulting p-value from the ADF test is less than 0.01 which indicates that first-order differencing the time series creates a stationary time series. 
 
 ```R
 manatee_diff_ts <- diff(total_manatee_ts)
@@ -309,7 +289,7 @@ autoplot(manatee_diff_ts)
 Now that we have a stationary time series, we can determine the appropriate *p*, *d*, and *q* values for an `ARIMA(p,d,q)` model.
 
 * *p* = order of the autoregressive part - determined by viewing PACF plot
-* *d* = degree of first differencing involved - determined by differencing the time series data
+* *d* = degree of differencing involved - determined by the order of differencing necessary
 * *q* = order of the moving average part - determined by viewing ACF plot
 
 There are a special cases of the ARIMA model, which are good to note because once we start combining components to form more complicated models, it is much easier to work with the backshift notation (when working with time series lags). 
@@ -320,17 +300,15 @@ There are a special cases of the ARIMA model, which are good to note because onc
 * Autoregression: ARIMA(p,0,0)
 * Moving Average: ARIMA(0,0,q)
 
-It can be difficult to select appropriate values for *p*, *d*, and *q*, so we can use the `auto.arima()` function in R.
+It can be difficult to select appropriate values for *p*, *d*, and *q*, so we can use the `auto.arima()` function in R to automate this process.
 
 ```R
 fit <- auto.arima(total_manatee_ts, seasonal = FALSE)
 ```
 
-The selected model for our time series is a ARIMA(2,1,2) with drift model. 
+The selected model for our time series is a ARIMA(2,1,2) with drift model. Plotting the forecasts:
 
-```r
-fit %>% forecast(h = 10) %>% autoplot()
-```
+
 <img src="https://user-images.githubusercontent.com/54876028/116285830-87140c80-a75c-11eb-8d7c-4f72ad86ab7f.png" width="550" height="500"/>
 
 To check the residuals of our model forecasts, we can use the code below.
@@ -340,7 +318,7 @@ checkresiduals(fit)
 ```
 <img src="https://user-images.githubusercontent.com/54876028/116290412-6e5a2580-a761-11eb-835c-daaa007f0d65.png" width="550" height="500"/>
 
-Now, while automated models are beneficial, we can still fit the model manually by using the `Arima()` function. It should be noted that by using this function, we would be able to apply the estimated model to new data, even though this function is recommended. We can fit an ARIMA model manually by using the following general approach:
+Now, while automated models are beneficial, we can still fit the model manually by using the `Arima()` function. It should be noted that by using this function, we would not be able to apply the estimated model to new data, even though this function is recommended. We can fit an ARIMA model manually by using the following general approach:
 
 1. Plot data
 2. Transform data to stabilize variance if necessary
@@ -350,14 +328,14 @@ Now, while automated models are beneficial, we can still fit the model manually 
 6. Check residuals
 7. Calculate forecasts once the residuals look like white noise
 
-We have already plotted the data, which shows that our time series has an upward trend, but does not indicate changes in variance. We have also shown that the time series is non-stationary but by taking the first difference of the data, our time series is stationary. 
+We have already plotted the data, which shows that our time series has an upward trend, but does not indicate changes in variance. We have also shown that the time series is non-stationary. By taking the first difference of the data, our time series is stationary. 
 
 ```r
 total_manatee_ts %>% diff() %>% ggtsdisplay(main = "")
 ```
 <img src="https://user-images.githubusercontent.com/54876028/116292267-82068b80-a763-11eb-9750-c435edaa100c.png" width="550" height="500"/>
 
-The PACF plot above suggests an AR(2) model. Thus, an initial candidate model is an ARIMA(2,1,0) model. We will fit this model along with variations including ARIMA(3,1,0), ARIMA(3,1,1), ARIMA(2,1,1). Of these, the ARIMA(2,1,0) has a slightlt smaller AICc value.
+The PACF plot above suggests an AR(2) model. Thus, an initial candidate model is an ARIMA(2,1,0) model. We will fit this model along with similar variations including ARIMA(3,1,0), ARIMA(3,1,1), ARIMA(2,1,1). Of these, the ARIMA(2,1,0) has a slightly smaller AICc value.
 
 
 <img src="https://user-images.githubusercontent.com/54876028/116293498-faba1780-a764-11eb-9626-760bef44f80f.png" width="550" height="500"/>
@@ -372,7 +350,7 @@ checkresiduals(fit2)
 
 ## Summary of Results
 
-When determining the forecasting model for your data, there are various considerations that need to be made. A few include the amount of available data, the type of data (weekly, monthly, quarterly, annually), the forecasting horizon (will forecasting be required for one month in advance, one year, ten years, etc), and whether the data is trending or has seasonality. Our data did not have any seasonality, since we used annual data, but the data was in an upward trend. For this type of data, the two mostly used models include Exponential Smoothing and ARIMA models.  
+When determining the forecasting model for the given data, there are various considerations that need to be made. A few include the amount of available data, the type of data (weekly, monthly, quarterly, annually), the forecasting horizon (will forecasting be required for one month in advance, one year, ten years, etc), and whether the data is trending or has seasonality. Our data did not have any seasonality, but the data was in an upward trend. For this type of data, the two mostly used models include Exponential Smoothing and ARIMA models.  
 
 The first modeling technique used was Exponential Smoothing. The 80% prediction interval for the 2021 forecast, and a 95% prediction interval for the 2021 forecast are in the table below. 
 
@@ -381,7 +359,7 @@ Model        | Alpha (α)     | Beta (β) | Gamma (γ)  | SSE  | Forecast | Lo. 
 Simple Exponential Smoothing | 0.3367 | NA | NA | 590679.3  | 619.8591 | 482.2740 | 757.4442 | 409.4408 | 830.2774  
 Exponential Smoothing | 0.1031 | 0.4452 | NA | 490796.7  | 673.9750 | 538.6527 | 809.2973 | 467.0174 | 880.9326 
 
-It should be noted that the Simple Exponential Smoothing has a "flat" forecast function, which means that all forecasts take the same value. In other words, the forecast model for 2021 to 2030 are all 619.8591, which can be seen in the first forecasting plot in the *Exponential Smoothing* section. As mentioned in that section, alpha and beta have values between 0 and 1, and values that are close to zero suggest that little weight is placed on the most recent observations when making forecasts of future values. In other words, the alpha (level of smoothing) value for the Simple Exponential Smoothing model suggests that the forecasts of future values rely mostly on older observations, which is similar to the alpha value for the Exponential Smoothing model. However, the beta (trend component) suggests that both recent and older observations are determinig forecast values. From the table above, the Exponential Smoothing model is a better fit due to the smaller SSE (sum of squared errors) value. 
+It should be noted that the Simple Exponential Smoothing has a "flat" forecast function, which means that all forecasts take the same value. In other words, the forecasts model for 2021 to 2030 are all 619.8591, which can be seen in the first forecasting plot in the *Exponential Smoothing* section. As mentioned in that section, alpha and beta have values between 0 and 1, and values that are close to zero suggest that little weight is placed on the most recent observations when making forecasts of future values. In other words, the alpha (level of smoothing) value for the Simple Exponential Smoothing model suggests that the forecasts of future values rely mostly on older observations, which is similar to the alpha value for the Exponential Smoothing model. However, the beta (trend component) suggests that both recent and older observations are determinig forecast values. From the table above, the Exponential Smoothing model is a better fit due to the smaller SSE (sum of squared errors) value. 
 
 
 The second modeling technique used was the ARIMA technique. The 80% prediction interval for the 2021 forecast, and a 95% prediction interval for the 2021 forecast are in the table below. 
@@ -398,15 +376,14 @@ Recall from above, we want our model to minimize the AICc value. Thus, the "bett
 
 ### Evaluating Forecast Accuracy
 
-One way to evaluate our forecast accuracy is to create a training and testing dataset, where the training set is used to estimate any parameters of the forecasting method and the testing data is used to evaluate the model's accuracy. Now, the training set is usually comprised of the first 75-80% of the time series data, while the testing set is the remaining 20-25%. Using the training dataset for the Exponential Smoothing and the ARIMA(2,1,2) model, we obtain the following results. 
+One way to evaluate the forecast accuracy of our models is to create a training and testing dataset, where the training set is used to estimate any parameters of the forecasting method and the testing data is used to evaluate the model's accuracy. Now, the training set is usually comprised of the first 75-80% of the time series data, while the testing set is the remaining 20-25%. Using the training dataset for the Exponential Smoothing and the ARIMA(2,1,2) model, we obtain the following results. 
 
 Model  |    RMSE | MAE | MAPE | 
 -----  |    -----  | -----  | -----    
 Exponential Smoothing  |  174.02882  | 120.97609  | 19.67884  
 ARIMA(2,1,2)  | 264.76398   | 206.96896  | 34.50
 
-The two most commonly used measures are the Mean Absolute Error (MAE) and the Root Mean Squared Error (RMSE). Usually, the MAE is to compare forecast methods since is it easy to understand and compute. However, the RMSE is widely used. The Mean Absolute Percentage Error (MAPE) is unit-free, which makes it frequently used to compare forecast performances. Measures are based on the testing data, which serves as a more objective basis than the training period to assess predictive accuracy
- With either measure used, the results above suggest that the Exponential Smoothing method is the better method. We can also plot the results. 
+The two most commonly used measures are the Mean Absolute Error (MAE) and the Root Mean Squared Error (RMSE). Usually, the MAE is to compare forecast methods since is it easy to understand and compute. However, the RMSE is more widely used. The Mean Absolute Percentage Error (MAPE) is unit-free, which makes it frequently used to compare forecast performances. Measures are based on the testing data, which serves as a more objective basis than the training period to assess predictive accuracy. With either measure used, the results above suggest that the Exponential Smoothing method is the better method. We can also plot the results. 
 
 <img src="https://user-images.githubusercontent.com/54876028/116443934-3c5cc800-a822-11eb-960f-a1bbb2c7cf17.png" width="550" height="500"/>
 
@@ -414,9 +391,9 @@ The plot above also suggests that the Exponental Smoothing model is the better m
 
 ## For the Future
 
-For the future of this project, other forecasting methods can be explored such as dynamic regression models, neural network models, or bootstrapping and bagging methods. This allows us to compare more models, which then allows us to choose a more appropriate model and apply to new data. In addition, we can explore other model evaluation techniques to identify the "best" model.
+Future work for this project would include exploring other forecasting methods such as dynamic regression models, neural network models, or bootstrapping and bagging methods. This allows us to compare more models, which then allows us to choose a more appropriate model and apply these models to new data. In addition, we can explore other model evaluation techniques to identify the "best" model.
 
-Another future project idea would be to build forecasting models for the yearly totals for each cause of death (Natural, Human, etc). By analyzing these models, we can estimate which cause of death may have the most impact on the manatee population and focus on protecting the manatees. Further, forecasting models for yearly totals by county can be analyzed to identify the counties with the highest mortalities and which are predicted to have the most manatee mortalities. This combined information would be beneficial in taking steps to protect the Florida manatees.  
+Another future project idea would be to build forecasting models for the yearly totals for each cause of death (Natural, Human, etc). By analyzing these models, we can estimate which cause of death may have the most impact on the manatee population. Further, forecasting models for yearly totals by county can be analyzed to identify the counties with the highest mortalities and which are predicted to have the most manatee mortalities. This combined information would be beneficial in taking steps to protect the Florida manatees.  
 
 ## Resources
 1. Manatee Critical Habitat Map: https://www.fws.gov/southeast/wildlife/mammals/manatee/
