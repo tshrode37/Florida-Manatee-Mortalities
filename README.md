@@ -403,9 +403,10 @@ One way to evaluate our forecast accuracy is to create a training and testing da
 Model  |    RMSE | MAE | MAPE | 
 -----  |    -----  | -----  | -----    
 Exponential Smoothing  |  174.02882  | 120.97609  | 19.67884  
-ARIMA(2,1,2)  | 264.76398   | 206.96896  | 21.54833
+ARIMA(2,1,2)  | 264.76398   | 206.96896  | 34.50
 
-The two most commonly used measures are the Mean Absolute Error (MAE) and the Root Mean Squared Error (RMSE). Usually, the MAE is to compare forecast methods since is it easy to understand and compute. However, the RMSE is widely used. The Mean Absolute Percentage Error (MAPE) is unit-free, which makes it frequently used to compare forecast performances. With either measure used, the results above suggest that the Exponential Smoothing method is the better method. We can also plot the results. 
+The two most commonly used measures are the Mean Absolute Error (MAE) and the Root Mean Squared Error (RMSE). Usually, the MAE is to compare forecast methods since is it easy to understand and compute. However, the RMSE is widely used. The Mean Absolute Percentage Error (MAPE) is unit-free, which makes it frequently used to compare forecast performances. Measures are based on the testing data, which serves as a more objective basis than the training period to assess predictive accuracy
+ With either measure used, the results above suggest that the Exponential Smoothing method is the better method. We can also plot the results. 
 
 <img src="https://user-images.githubusercontent.com/54876028/116443934-3c5cc800-a822-11eb-960f-a1bbb2c7cf17.png" width="550" height="500"/>
 
