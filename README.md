@@ -398,7 +398,7 @@ Recall from above, we want our model to minimize the AICc value. Thus, the "bett
 
 ### Evaluating Forecast Accuracy
 
-One way to evaluate our forecast accuracy is to create a training and testing dataset, where the training set is used to estimate any parameters of the forecasting method and the testing data is used to evaluate the model's accuracy. Now, the training set is usually compromised of the first 75-80% of the time series data, while the testing set is the remaining 20-25%. Using the training dataset for the Exponential Smoothing and the ARIMA(2,1,2) model, we obtain the following results. 
+One way to evaluate our forecast accuracy is to create a training and testing dataset, where the training set is used to estimate any parameters of the forecasting method and the testing data is used to evaluate the model's accuracy. Now, the training set is usually comprised of the first 75-80% of the time series data, while the testing set is the remaining 20-25%. Using the training dataset for the Exponential Smoothing and the ARIMA(2,1,2) model, we obtain the following results. 
 
 Model  |    RMSE | MAE | MAPE | 
 -----  |    -----  | -----  | -----    
